@@ -1,3 +1,3 @@
 # Cobra
 
-Free and open source shell
+Free and open source shell (incomplete)
