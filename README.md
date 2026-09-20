@@ -32,6 +32,15 @@ and then
 ```shell
 cobra
 ```
+## Uninstall
+system wide:
+```shell
+git clone https://github.com/atkittycatcat/cobra.git && cd cobra && sudo make uninstall && cd ../ && rm -r cobra
+```
+user only:
+```shell
+git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make PREFIX=$(HOME)/.local uninstall && cd ../ && rm -r cobra
+```
 
 ## Run 
 ```shell
