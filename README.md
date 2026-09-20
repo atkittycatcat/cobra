@@ -22,11 +22,11 @@ cd ../ && rm -r cobra
 Or just mash it up into one command
 system wide:
 ```shell
-git clone https://github.com/atkittycatcat/cobra.git && cd cobra && sudo make install && cd ../ && rm -r cobra
+git clone https://github.com/atkittycatcat/cobra.git && cd cobra && sudo make install && cd ../ && sudo rm -r cobra
 ```
 user only:
 ```shell
-git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make PREFIX=$(HOME)/.local install && cd ../ && rm -r cobra
+git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make PREFIX=$(HOME)/.local install && cd ../ && sudo rm -r cobra
 ```
 and then 
 ```shell
