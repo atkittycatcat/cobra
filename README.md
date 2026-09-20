@@ -1,6 +1,6 @@
 # Cobra
 
-Cobra is a free and open source shell written in C, assisted (not fully written) by AI.
+Cobra is a free and open source shell written in C.
 
 ## Install script
 ```shell
