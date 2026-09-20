@@ -372,50 +372,51 @@ static int execute_commands(char *line) {
 
       command_start = current + 1;
     }
-
-    if (in_single_quote || in_double_quote) {
-      fprintf(stderr, "shell: unmatched quote\n");
-      return -1;
-    }
-
-    char *command = trim_whitespace(command_start);
-
-    if (*command != '\0') {
-      execute_command(command);
-    }
-
-    return 0;
   }
 
-  int main(void) {
-    char *line = NULL;
-    size_t line_cap = 0;
-    ssize_t line_len;
-    struct sigaction signal_action = {0};
+  if (in_single_quote || in_double_quote) {
+    fprintf(stderr, "shell: unmatched quote\n");
+    return -1;
+  }
 
-    signal_action.sa_handler = handle_sigint;
-    sigemptyset(&signal_action.sa_mask);
-    if (sigaction(SIGINT, &signal_action, NULL) == -1) {
-      perror("sigaction");
-      return 1;
-    }
+  char *command = trim_whitespace(command_start);
 
-    while (1) {
-      print_prompt();
+  if (*command != '\0') {
+    execute_command(command);
+  }
 
-      line_len = getline(&line, &line_cap, stdin);
-      if (line_len == -1) {
-        if (errno == EINTR && sigint_received) {
-          sigint_received = 0;
-          clearerr(stdin);
-          putchar('\n');
-          continue;
-        }
+  return 0;
+}
+
+int main(void) {
+  char *line = NULL;
+  size_t line_cap = 0;
+  ssize_t line_len;
+  struct sigaction signal_action = {0};
+
+  signal_action.sa_handler = handle_sigint;
+  sigemptyset(&signal_action.sa_mask);
+  if (sigaction(SIGINT, &signal_action, NULL) == -1) {
+    perror("sigaction");
+    return 1;
+  }
+
+  while (1) {
+    print_prompt();
+
+    line_len = getline(&line, &line_cap, stdin);
+    if (line_len == -1) {
+      if (errno == EINTR && sigint_received) {
+        sigint_received = 0;
+        clearerr(stdin);
         putchar('\n');
-        free(line);
-        return 0;
+        continue;
       }
-
-      execute_commands(line);
+      putchar('\n');
+      free(line);
+      return 0;
     }
+
+    execute_commands(line);
   }
+}
