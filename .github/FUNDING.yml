@@ -9,5 +9,5 @@ liberapay: # Replace with a single Liberapay username
 issuehunt: # Replace with a single IssueHunt username
 lfx_crowdfunding: # Replace with a single LFX Crowdfunding project-name e.g., cloud-foundry
 polar: # Replace with a single Polar username
-thanks_dev: atkittycatcat
-custom: ["BTC: bc1q3fgajwc7mt5yc5jun7f7ghg4hg7qy27f8p72mq"]
+thanks_dev: 
+custom: [""]
