@@ -334,44 +334,88 @@ static void execute_command(char *cmd) {
   free(token_storage);
 }
 
-int main(void) {
-  char *line = NULL;
-  size_t line_cap = 0;
-  ssize_t line_len;
-  struct sigaction signal_action = {0};
+static int execute_commands(char *line) {
+  char *command_start = line;
+  int in_single_quote = 0;
+  int in_double_quote = 0;
+  int escaped = 0;
 
-  signal_action.sa_handler = handle_sigint;
-  sigemptyset(&signal_action.sa_mask);
-  if (sigaction(SIGINT, &signal_action, NULL) == -1) {
-    perror("sigaction");
-    return 1;
+  for (char *current = line; *current != '\0'; current++) {
+    if (escaped) {
+      escaped = 0;
+      continue;
+    }
+
+    if (!in_single_quote && *current == '\\') {
+      escaped = 1;
+      continue;
+    }
+
+    if (!in_double_quote && *current == '\'') {
+      in_single_quote = !in_single_quote;
+      continue;
+    }
+
+    if (!in_single_quote && *current == '"') {
+      in_double_quote = !in_double_quote;
+      continue;
+    }
+
+    if (!in_single_quote && !in_double_quote && *current == ';') {
+      *current = '\0';
+
+      char *command = trim_whitespace(command_start);
+
+      if (*command != '\0') {
+        execute_command(command);
+      }
+
+      command_start = current + 1;
+    }
+
+    if (in_single_quote || in_double_quote) {
+      fprintf(stderr, "shell: unmatched quote\n");
+      return -1;
+    }
+
+    char *command = trim_whitespace(command_start);
+
+    if (*command != '\0') {
+      execute_command(command);
+    }
+
+    return 0;
   }
 
-  while (1) {
-    print_prompt();
+  int main(void) {
+    char *line = NULL;
+    size_t line_cap = 0;
+    ssize_t line_len;
+    struct sigaction signal_action = {0};
 
-    line_len = getline(&line, &line_cap, stdin);
-    if (line_len == -1) {
-      if (errno == EINTR && sigint_received) {
-        sigint_received = 0;
-        clearerr(stdin);
+    signal_action.sa_handler = handle_sigint;
+    sigemptyset(&signal_action.sa_mask);
+    if (sigaction(SIGINT, &signal_action, NULL) == -1) {
+      perror("sigaction");
+      return 1;
+    }
+
+    while (1) {
+      print_prompt();
+
+      line_len = getline(&line, &line_cap, stdin);
+      if (line_len == -1) {
+        if (errno == EINTR && sigint_received) {
+          sigint_received = 0;
+          clearerr(stdin);
+          putchar('\n');
+          continue;
+        }
         putchar('\n');
-        continue;
+        free(line);
+        return 0;
       }
-      putchar('\n');
-      free(line);
-      return 0;
-    }
 
-    char *saveptr = NULL;
-    char *cmd = strtok_r(line, ";", &saveptr);
-
-    while (cmd != NULL) {
-      cmd = trim_whitespace(cmd);
-      if (*cmd != '\0') {
-        execute_command(cmd);
-      }
-      cmd = strtok_r(NULL, ";", &saveptr);
+      execute_commands(line);
     }
   }
-}
