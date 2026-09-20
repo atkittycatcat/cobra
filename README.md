@@ -1,8 +1,8 @@
-## Cobra
+# Cobra
 
 Cobra is a free and open source shell written in C, assisted (not fully written) by AI.
 
-# Install manually
+## Install manually
 To install the shell, go clone this code and cd into it:
 ```shell
 git clone https://github.com/atkittycatcat/cobra.git && cd cobra
@@ -33,7 +33,7 @@ and then
 cobra
 ```
 
-# Run 
+## Run 
 ```shell
 git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make run
 ```
