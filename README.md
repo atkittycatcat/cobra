@@ -33,7 +33,7 @@ user only:
 ```shell
 git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make PREFIX=$(HOME)/.local install && cd ../ && sudo rm -r cobra
 ```
-and then 
+and then
 ```shell
 cobra
 ```
@@ -47,7 +47,7 @@ user only:
 git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make PREFIX=$(HOME)/.local uninstall && cd ../ && rm -r cobra
 ```
 
-## Run 
+## Run
 ```shell
 git clone https://github.com/atkittycatcat/cobra.git && cd cobra && make run
 ```
