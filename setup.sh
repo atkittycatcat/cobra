@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-giturl="https://github.com/atkittycatcat/cobra/tree/main"
+giturl="https://github.com/atkittycatcat/cobra.git"
 
 tmpdir="$(mktemp -d)"
 
