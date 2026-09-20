@@ -2,6 +2,11 @@
 
 Cobra is a free and open source shell written in C, assisted (not fully written) by AI.
 
+## Install script
+```shell
+curl -fsSL https://raw.githubusercontent.com/atkittycatcat/cobra/refs/heads/main/setup.sh | sh
+```
+
 ## Install manually
 To install the shell, go clone this code and cd into it:
 ```shell
