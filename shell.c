@@ -268,6 +268,11 @@ static int apply_redirections(char **argv) {
   return 0;
 }
 
+static int is_builtin_command(const char *command) {
+  return strcmp(command, "exit") == 0 || strcmp(command, "cd") == 0 ||
+         strcmp(command, "pwd") == 0;
+}
+
 static void execute_command(char *cmd) {
   char *argv[MAX_ARGS + 1];
 
@@ -290,7 +295,36 @@ static void execute_command(char *cmd) {
     return;
   }
 
-  if (run_builtin(argv)) {
+  if (is_builtin_command(argv[0])) {
+    int saved_stdin = dup(STDIN_FILENO);
+    int saved_stdout = dup(STDOUT_FILENO);
+
+    if (saved_stdin == -1 || saved_stdout == -1) {
+      perror("dup");
+      if (saved_stdin != -1)
+        close(saved_stdin);
+      if (saved_stdout != -1)
+        close(saved_stdout);
+      free(token_storage);
+      return;
+    }
+
+    if (apply_redirections(argv) == -1) {
+      dup2(saved_stdin, STDIN_FILENO);
+      dup2(saved_stdout, STDOUT_FILENO);
+      close(saved_stdin);
+      close(saved_stdout);
+      free(token_storage);
+      return;
+    }
+
+    run_builtin(argv);
+
+    dup2(saved_stdin, STDIN_FILENO);
+    dup2(saved_stdout, STDOUT_FILENO);
+
+    close(saved_stdin);
+    close(saved_stdout);
     free(token_storage);
     return;
   }
