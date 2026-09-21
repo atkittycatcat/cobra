@@ -3,3 +3,4 @@ build/
 *.out
 *.swp
 *~
+shell.c.bak
